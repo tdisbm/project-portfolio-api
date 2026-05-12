@@ -1,0 +1,19 @@
+<mat-toolbar color="primary" class="home-toolbar">
+  <span class="toolbar-spacer"></span>
+  @if (auth.currentUser()) {
+    <span class="username">{{ auth.currentUser()!.username }}</span>
+  }
+  <button mat-icon-button (click)="auth.logout()" matTooltip="Sign out">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="home-container">
+  <div class="hero">
+    <h1>My Portfolio</h1>
+    <p>A collection of my work and projects.</p>
+    <button mat-raised-button color="primary" routerLink="/projects">
+      My Projects
+    </button>
+  </div>
+</div>

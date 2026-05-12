@@ -1,0 +1,58 @@
+<div class="register-container">
+  <div class="register-card mat-elevation-z4">
+    <h1 class="register-title">Create Account</h1>
+
+    @if (error()) {
+      <div class="error-banner">{{ error() }}</div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" autocomplete="username" />
+        @if (form.get('username')?.hasError('maxlength')) {
+          <mat-error>Username must be at most 150 characters</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password"
+               [type]="hidePassword() ? 'password' : 'text'"
+               autocomplete="new-password" />
+        <button matIconSuffix mat-icon-button type="button"
+                (click)="hidePassword.set(!hidePassword())">
+          <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (form.get('password')?.hasError('minlength')) {
+          <mat-error>Password must be at least 8 characters</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Confirm Password</mat-label>
+        <input matInput formControlName="confirmPassword"
+               [type]="hideConfirm() ? 'password' : 'text'"
+               autocomplete="new-password" />
+        <button matIconSuffix mat-icon-button type="button"
+                (click)="hideConfirm.set(!hideConfirm())">
+          <mat-icon>{{ hideConfirm() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (form.hasError('passwordMismatch') && form.get('confirmPassword')?.dirty) {
+          <mat-error>Passwords do not match</mat-error>
+        }
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit"
+              class="submit-btn" [disabled]="form.invalid || loading()">
+        @if (loading()) {
+          <mat-spinner diameter="20" />
+        } @else {
+          Create Account
+        }
+      </button>
+    </form>
+
+    <p class="switch-link">Already have an account? <a routerLink="/login">Sign in</a></p>
+  </div>
+</div>

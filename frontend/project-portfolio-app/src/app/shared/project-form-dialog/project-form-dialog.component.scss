@@ -1,0 +1,17 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+  min-width: 520px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.date-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}

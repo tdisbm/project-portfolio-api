@@ -1,0 +1,48 @@
+.home-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+
+  .toolbar-spacer { flex: 1; }
+
+  .username {
+    font-size: 0.875rem;
+    margin-right: 4px;
+    opacity: 0.9;
+  }
+}
+
+.home-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a237e 0%, #4a148c 100%);
+}
+
+.hero {
+  text-align: center;
+  color: white;
+  padding: 32px;
+
+  h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin: 0 0 16px;
+    letter-spacing: -1px;
+  }
+
+  p {
+    font-size: 1.25rem;
+    margin: 0 0 40px;
+    opacity: 0.85;
+  }
+
+  button {
+    font-size: 1rem;
+    padding: 8px 32px;
+    height: 48px;
+  }
+}

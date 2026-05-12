@@ -1,0 +1,180 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button routerLink="/" matTooltip="Back to Home">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <span>My Projects</span>
+  <span class="toolbar-spacer"></span>
+  <button mat-raised-button (click)="openCreateDialog()">
+    <mat-icon>add</mat-icon>
+    Add Project
+  </button>
+  <button mat-icon-button (click)="auth.logout()" matTooltip="Sign out" style="margin-left: 8px;">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="page-content">
+  <div class="table-container mat-elevation-z2">
+    <table mat-table [dataSource]="projects()">
+
+        <!-- # -->
+        <ng-container matColumnDef="no">
+          <th mat-header-cell *matHeaderCellDef class="no-col">#</th>
+          <td mat-cell *matCellDef="let row; let i = index" class="no-col">
+            {{ currentPage() * pageSize() + i + 1 }}
+          </td>
+        </ng-container>
+
+        <!-- Name -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="col-header">
+              <span class="col-label sortable" [class.active]="sortColumn === 'name'" (click)="onSort('name')">
+                Name <mat-icon class="sort-icon">{{ getSortIcon('name') }}</mat-icon>
+              </span>
+              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-field">
+                <mat-icon matPrefix class="prefix-icon">search</mat-icon>
+                <input matInput #nameInput (input)="onNameFilter(nameInput.value)" placeholder="Search..." />
+              </mat-form-field>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let p">
+            <span class="project-name">{{ p.name }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Description -->
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="col-header">
+              <span class="col-label">Description</span>
+              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-field">
+                <mat-icon matPrefix class="prefix-icon">search</mat-icon>
+                <input matInput #descInput (input)="onDescriptionFilter(descInput.value)" placeholder="Search..." />
+              </mat-form-field>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let p">
+            <span class="truncate" [title]="p.description">{{ p.description || '—' }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Technologies -->
+        <ng-container matColumnDef="technologies_used">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="col-header">
+              <span class="col-label">Technologies</span>
+              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-field">
+                <mat-chip-grid #techFilterGrid>
+                  @for (tech of techFilters; track tech) {
+                    <mat-chip-row (removed)="removeTechFilter(tech)">
+                      {{ tech }}
+                      <button matChipRemove><mat-icon>cancel</mat-icon></button>
+                    </mat-chip-row>
+                  }
+                </mat-chip-grid>
+                <input
+                  placeholder="Any of... (Enter)"
+                  [matChipInputFor]="techFilterGrid"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  (matChipInputTokenEnd)="addTechFilter($event)"
+                />
+              </mat-form-field>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let p">
+            <mat-chip-set>
+              @for (tech of p.technologies_used; track tech) {
+                <mat-chip class="tech-chip" (click)="addTechFilterFromClick(tech)"
+                          matTooltip="Filter by {{ tech }}">{{ tech }}</mat-chip>
+              }
+            </mat-chip-set>
+          </td>
+        </ng-container>
+
+        <!-- Start Date -->
+        <ng-container matColumnDef="date_start">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="col-header">
+              <span class="col-label sortable" [class.active]="sortColumn === 'date_start'" (click)="onSort('date_start')">
+                Start Date <mat-icon class="sort-icon">{{ getSortIcon('date_start') }}</mat-icon>
+              </span>
+              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-field">
+                <input matInput [matDatepicker]="startAfterPicker" [value]="startAfter()"
+                       placeholder="From" (dateChange)="onStartAfterChange($event)" readonly />
+                @if (startAfter()) {
+                  <button matIconSuffix mat-icon-button class="clear-btn"
+                          (click)="clearStartAfter(); $event.stopPropagation()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                }
+                <mat-datepicker-toggle matIconSuffix [for]="startAfterPicker" />
+                <mat-datepicker #startAfterPicker />
+              </mat-form-field>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let p">{{ p.date_start }}</td>
+        </ng-container>
+
+        <!-- End Date -->
+        <ng-container matColumnDef="date_end">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="col-header">
+              <span class="col-label sortable" [class.active]="sortColumn === 'date_end'" (click)="onSort('date_end')">
+                End Date <mat-icon class="sort-icon">{{ getSortIcon('date_end') }}</mat-icon>
+              </span>
+              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-field">
+                <input matInput [matDatepicker]="endBeforePicker" [value]="endBefore()"
+                       placeholder="To" (dateChange)="onEndBeforeChange($event)" readonly />
+                @if (endBefore()) {
+                  <button matIconSuffix mat-icon-button class="clear-btn"
+                          (click)="clearEndBefore(); $event.stopPropagation()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                }
+                <mat-datepicker-toggle matIconSuffix [for]="endBeforePicker" />
+                <mat-datepicker #endBeforePicker />
+              </mat-form-field>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let p">{{ p.date_end ?? '—' }}</td>
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let p" class="actions-cell">
+            <button mat-icon-button color="primary" (click)="openEditDialog(p)" matTooltip="Edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="confirmDelete(p)" matTooltip="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      @if (loading()) {
+        <div class="loading-overlay">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      } @else if (projects().length === 0) {
+        <div class="empty-state">
+          <mat-icon>folder_open</mat-icon>
+          <p>No projects found</p>
+        </div>
+      }
+
+      <mat-paginator
+        [length]="totalCount()"
+        [pageSize]="pageSize()"
+        [pageIndex]="currentPage()"
+        [pageSizeOptions]="[5, 10, 25, 50]"
+        (page)="onPage($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+    </div>
+</div>

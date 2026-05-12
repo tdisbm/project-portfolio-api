@@ -1,0 +1,78 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Project' : 'Create Project' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" placeholder="Project name" />
+      @if (form.get('name')?.invalid && form.get('name')?.touched) {
+        @if (form.get('name')?.hasError('required')) {
+          <mat-error>Name is required</mat-error>
+        } @else if (form.get('name')?.hasError('maxlength')) {
+          <mat-error>Name must be at most 200 characters</mat-error>
+        }
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        rows="3"
+        placeholder="Describe your project..."
+      ></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Technologies Used</mat-label>
+      <mat-chip-grid #chipGrid>
+        @for (tech of technologies; track tech) {
+          <mat-chip-row (removed)="removeTech(tech)">
+            {{ tech }}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        }
+      </mat-chip-grid>
+      <input
+        placeholder="Type a technology and press Enter..."
+        [matChipInputFor]="chipGrid"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="addTech($event)"
+      />
+    </mat-form-field>
+
+    <div class="date-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="startPicker" formControlName="date_start" readonly />
+        <mat-datepicker-toggle matIconSuffix [for]="startPicker" />
+        <mat-datepicker #startPicker />
+        @if (form.get('date_start')?.invalid && form.get('date_start')?.touched) {
+          <mat-error>Start date is required</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>End Date (optional)</mat-label>
+        <input matInput [matDatepicker]="endPicker" formControlName="date_end" readonly />
+        <mat-datepicker-toggle matIconSuffix [for]="endPicker" />
+        <mat-datepicker #endPicker />
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()" [disabled]="saving">Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="save()"
+    [disabled]="form.invalid || saving"
+  >
+    {{ saving ? 'Saving...' : (isEdit ? 'Update' : 'Create') }}
+  </button>
+</mat-dialog-actions>

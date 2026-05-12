@@ -1,0 +1,160 @@
+.toolbar-spacer {
+  flex: 1;
+}
+
+.page-content {
+  padding: 24px;
+}
+
+.table-container {
+  position: relative;
+  overflow-x: auto;
+  min-height: 160px;
+}
+
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.75);
+  z-index: 2;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px;
+  color: rgba(0, 0, 0, 0.38);
+
+  mat-icon {
+    font-size: 56px;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
+table {
+  width: 100%;
+}
+
+/* Column header layout */
+.col-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0;
+}
+
+.col-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+
+  &.sortable {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+    user-select: none;
+
+    .sort-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      opacity: 0.4;
+      transition: opacity 0.15s;
+    }
+
+    &:hover {
+      color: rgba(0, 0, 0, 0.87);
+      .sort-icon { opacity: 0.7; }
+    }
+
+    &.active {
+      color: rgba(0, 0, 0, 0.87);
+      .sort-icon { opacity: 1; }
+    }
+  }
+}
+
+th.mat-mdc-header-cell {
+  vertical-align: top;
+  padding-top: 12px !important;
+}
+
+.filter-field {
+  width: 100%;
+  --mat-form-field-container-height: 34px;
+  --mat-form-field-container-text-size: 12px;
+  font-size: 12px;
+
+  .prefix-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.clear-btn {
+  --mat-icon-button-state-layer-size: 24px;
+  --mat-icon-button-icon-size: 14px;
+  width: 24px !important;
+  height: 24px !important;
+  line-height: 24px;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* Cells */
+.project-name {
+  font-weight: 500;
+}
+
+.truncate {
+  display: block;
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.no-col {
+  width: 48px;
+  min-width: 48px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.38);
+  font-size: 12px;
+}
+
+.actions-cell {
+  white-space: nowrap;
+  width: 96px;
+}
+
+mat-paginator {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.tech-chip {
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
