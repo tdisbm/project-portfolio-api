@@ -29,6 +29,10 @@ export class ProjectService {
     return this.http.get<ProjectListResponse>(`${this.base}/`, { params });
   }
 
+  getProject(id: number): Observable<Project> {
+    return this.http.get<Project>(`${this.base}/${id}/`);
+  }
+
   createProject(data: ProjectPayload): Observable<Project> {
     return this.http.post<Project>(`${this.base}/create/`, data);
   }

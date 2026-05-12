@@ -199,10 +199,20 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   }
 
   openEditDialog(project: Project): void {
-    this.dialog
-      .open(ProjectFormDialogComponent, { width: '600px', data: project })
-      .afterClosed()
-      .subscribe(ok => { if (ok) this.loadProjects(); });
+    this.loading.set(true);
+    this.projectService.getProject(project.id).subscribe({
+      next: freshProject => {
+        this.loading.set(false);
+        this.dialog
+          .open(ProjectFormDialogComponent, { width: '800px', data: freshProject })
+          .afterClosed()
+          .subscribe(ok => { if (ok) this.loadProjects(); });
+      },
+      error: () => {
+        this.loading.set(false);
+        this.snackBar.open('Failed to load project', 'Close', { duration: 3000 });
+      },
+    });
   }
 
   confirmDelete(project: Project): void {
