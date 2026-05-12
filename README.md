@@ -199,10 +199,10 @@ When running locally, point the Angular environment at the Django dev server by 
 
 ```bash
 # Create 10 random projects linked to TESTUSER / TESTUSER (default)
-make seed
+make seed-projects
 
 # Create a specific number of projects
-make seed n=50
+make seed-projects n=50
 ```
 
 If the `TESTUSER` account does not exist it is created automatically. Running the command again only adds more projects — the existing user is never overwritten.
